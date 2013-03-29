@@ -27,9 +27,13 @@ public class Logger {
     private static final String DELIM_STR = "{}";
     private String prefixMsg;
 
-    private Logger(Class clazz) {
+    private Logger(Class clazz, boolean useSimpleName) {
         this.TAG = getTag(clazz);
-        this.prefixMsg = clazz.getName() + " >> ";
+        if (useSimpleName) {
+            this.prefixMsg = clazz.getSimpleName() + " >> ";
+        } else {
+            this.prefixMsg = clazz.getName() + " >> ";
+        }
     }
 
     private Logger(String tag) {
@@ -45,14 +49,26 @@ public class Logger {
     /**
      * Return Logger implementation object.
      * Fully qualified Class name will printed as prefix with log message.
-     * TAG will be derive from the package name.
-     * So, if your package start as com.google.map.... then "google" will use as TAG.
+     * TAG will be derive from the package name. Like, if your package
+     * start as com.google.map.... then "google" will use as TAG.
      *
      * @param clazz The Class need to log
      * @return Logger implementation object
      */
     public static Logger getLogger(Class clazz) {
-        return new Logger(clazz);
+        return new Logger(clazz, false);
+    }
+
+    /**
+     * Return Logger implementation object.
+     * Simple class name will printed with log message if useSimpleName is true
+     *
+     * @param clazz         The Class need to log
+     * @param useSimpleName Indicate whether print Simple Class name or Fully Qualified Class name
+     * @return Logger implementation object
+     */
+    public static Logger getLogger(Class clazz, boolean useSimpleName) {
+        return new Logger(clazz, useSimpleName);
     }
 
     /**
@@ -128,6 +144,14 @@ public class Logger {
         Log.v(TAG, getString(obj));
     }
 
+    /**
+     * Log a message at the INFO level according to the specified format and arguments.
+     * Can pass Throwable instance as last argument. Like
+     * <code>log.info("Exception caught, where, var1={}, var2={}", var1, var2, throwable);</code>
+     *
+     * @param message the format string
+     * @param args    the arguments. Throwable can be passed as last argument and will print accordingly.
+     */
     public void info(String message, Object... args) {
         Throwable tr = getThrowable(args);
 
@@ -223,7 +247,7 @@ public class Logger {
     /**
      * What a Terrible Failure: Report a condition that should never happen.
      * The error will always be logged at level ASSERT with the call stack.
-     *
+     * <p/>
      * Can pass Throwable instance as last argument. Like
      * <code>log.wtf("Exception caught, where, var1={}, var2={}", var1, var2, throwable);</code>
      *
@@ -256,11 +280,12 @@ public class Logger {
      * Before you make any calls to a logging method you should check to see
      * if your tag should be logged
      * .
-     * @param tag The tag to check.
+     *
+     * @param tag   The tag to check.
      * @param level The level to check.
      * @return Whether or not that this is allowed to be logged.
      */
-    public static boolean isLoggable (String tag, int level) {
+    public static boolean isLoggable(String tag, int level) {
         return Log.isLoggable(tag, level);
     }
 

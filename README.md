@@ -3,24 +3,25 @@ log4android
 
 ### Log4Android - Simple Logging Wrapper Library for Android
 
-Tired writing TAG each time writing log in Android? Bored with printing variables by concatenating string??
+Tired writing TAG each time writing log in Android? Bored with printing variables by concatenating string with "+"??
 
-Come from Java Enterprise App development where infamous Log4J used heavily??
+Come from Java Enterprise Development where infamous Log4J used heavily??
 
 Well, with this Log4Android library, you can easily write log with your old habit
-> log.debug("in XXXmethod, id={},name={},version={}", ver1, ver2, ver3);
+> log.debug("in myMethod, id={}, name={}", ver1, ver2);
 
 Features
 --------
-- Log syntex similar with popular log4j framework
+- Log syntax similar with popular log4j framework
 - Automatically added TAG with log message
 - Derive TAG from the package name
-- Fully qualified Class name will logged as prefix with log message
+- Fully Qualified Class name or SimpleClassName will logged as prefix with log message
+- Variable Arguments (more than 2) can be passed for printing unlike log4j framework
 - Very lightweight, < 5KB library size!
 
-Examples
---------
-First, add **Log4Android-1.0.jar** (can download from **releases** directory) at your android project library
+Quick Start
+-----------
+First, add **Log4Android-1.1.jar** (can download from **releases** directory) at your android project library
 
 Obtain a logger object in your Android code (Activity, Fragment, Service etc) like:
 > private static final Logger log = Logger.getLogger(MyActivity.class);
@@ -29,7 +30,12 @@ OR
 
 > private static final Logger log = Logger.getLogger("YOUR_TAG");
 
+OR
+
+> private static final Logger log = Logger.getLogger(MyActivity.class, "YOUR_TAG");
+
 Now, start writing log like:
+
 > log.info("onStart(), id={}, someObject={}", id, someObject);
 
 > log.debug(tvName.getText());
@@ -38,6 +44,13 @@ Now, start writing log like:
 
 > log.error(ex, "Error occur while trying to load image with id={}", id);
 
+Also can pass throwable/exception as the last argument which will print accordingly:
+> log.error("Exception at row id={}", id, throwable);
+
+
+API Docs
+--------
+API Docs can be found here: http://oneous.com/log4android/apidocs/
 
 ### Motivation
 
@@ -47,3 +60,7 @@ java logging framework. But "SLF4J Android" library has the following limitation
 <= 23 characters long due to a length restriction of log tags on the Android platform (e.g., com.example.myapp.MyClass
 tag translated to c*.e*.m*.MyClass), which can result in the same log tag for different classes
 (e.g., com.example.app.MyClass and com.example.anotherapp.MyClass both translate to c*.e*.a*.MyClass);
+So, sometimes, you can't distinguish classes. Besides, there is no other way to define your own TAG here.
+
+Also log4j framework does not support variable arguments (more than 2) in a easy way, one have to write like **new Object[]{var1, var2, var3}** which I found annoying.
+
