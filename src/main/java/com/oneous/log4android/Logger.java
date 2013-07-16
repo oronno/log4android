@@ -23,34 +23,35 @@ import android.util.Log;
 
 public class Logger {
 
-    private static String TAG;
     private static final String DELIM_STR = "{}";
+
+    private String tag;
     private String prefixMsg;
 
     private Logger(Class clazz, boolean useSimpleName) {
-        this.TAG = getTag(clazz);
+        this.tag = getTag(clazz);
         if (useSimpleName) {
-            this.prefixMsg = clazz.getSimpleName() + " >> ";
+            this.prefixMsg = getPrefixMessage(clazz.getSimpleName());
         } else {
-            this.prefixMsg = clazz.getName() + " >> ";
+            this.prefixMsg = getPrefixMessage(clazz.getName());
         }
     }
 
     private Logger(String tag) {
-        this.TAG = tag;
+        this.tag = tag;
         this.prefixMsg = "";
     }
 
     private Logger(Class clazz, String tag) {
-        this.TAG = tag;
-        this.prefixMsg = clazz.getName() + " >> ";
+        this.tag = tag;
+        this.prefixMsg = getPrefixMessage(clazz.getName());
     }
 
     /**
      * Return Logger implementation object.
      * Fully qualified Class name will printed as prefix with log message.
-     * TAG will be derive from the package name. Like, if your package
-     * start as com.google.map.... then "google" will use as TAG.
+     * tag will be derive from the package name. Like, if your package
+     * start as com.google.map.... then "google" will use as tag.
      *
      * @param clazz The Class need to log
      * @return Logger implementation object
@@ -73,7 +74,7 @@ public class Logger {
 
     /**
      * Return Logger implementation object.
-     * Provided tag string will be used as TAG.
+     * Provided tag-string will be used as 'tag'.
      * Will not print Fully qualified Class name with Message.
      *
      * @param tag Used to identify the source of a log message.
@@ -85,7 +86,7 @@ public class Logger {
 
     /**
      * Return Logger implementation object.
-     * Provided tag string will be used as TAG.
+     * Provided tag-string will be used as 'tag'.
      * Fully qualified Class name will printed as prefix with log message.
      *
      * @param clazz The Class need to log
@@ -96,8 +97,14 @@ public class Logger {
         return new Logger(clazz, tag);
     }
 
+
+    /**
+     * Log object at the VERBOSE level
+     *
+     * @param obj If object null, 'null' will be printed, otherwise obj.toString() will call
+     */
     public void verbose(Object obj) {
-        Log.v(TAG, getString(obj));
+        Log.v(tag, getString(obj));
     }
 
     /**
@@ -112,14 +119,20 @@ public class Logger {
         Throwable tr = getThrowable(args);
 
         if (tr == null) {
-            Log.v(TAG, formatMessage(message, args));
+            Log.v(tag, formatMessage(message, args));
         } else {
-            Log.v(TAG, formatMessage(message, args), tr);
+            Log.v(tag, formatMessage(message, args), tr);
         }
     }
 
+
+    /**
+     * Log object at the DEBUG level
+     *
+     * @param obj If object null, 'null' will be printed, otherwise obj.toString() will call
+     */
     public void debug(Object obj) {
-        Log.v(TAG, getString(obj));
+        Log.d(tag, getString(obj));
     }
 
     /**
@@ -134,14 +147,19 @@ public class Logger {
         Throwable tr = getThrowable(args);
 
         if (tr == null) {
-            Log.d(TAG, formatMessage(message, args));
+            Log.d(tag, formatMessage(message, args));
         } else {
-            Log.d(TAG, formatMessage(message, args), tr);
+            Log.d(tag, formatMessage(message, args), tr);
         }
     }
 
+    /**
+     * Log object at the INFO level
+     *
+     * @param obj If object null, 'null' will be printed, otherwise obj.toString() will call
+     */
     public void info(Object obj) {
-        Log.v(TAG, getString(obj));
+        Log.i(tag, getString(obj));
     }
 
     /**
@@ -156,19 +174,25 @@ public class Logger {
         Throwable tr = getThrowable(args);
 
         if (tr == null) {
-            Log.i(TAG, formatMessage(message, args));
+            Log.i(tag, formatMessage(message, args));
         } else {
-            Log.i(TAG, formatMessage(message, args), tr);
+            Log.i(tag, formatMessage(message, args), tr);
         }
     }
 
     @Deprecated
     public void info(Throwable e, String message, Object... args) {
-        Log.i(TAG, formatMessage(message, args), e);
+        Log.i(tag, formatMessage(message, args), e);
     }
 
+
+    /**
+     * Log object at the WARN level
+     *
+     * @param obj If object null, 'null' will be printed, otherwise obj.toString() will call
+     */
     public void warn(Object obj) {
-        Log.v(TAG, getString(obj));
+        Log.w(tag, getString(obj));
     }
 
     /**
@@ -183,19 +207,25 @@ public class Logger {
         Throwable tr = getThrowable(args);
 
         if (tr == null) {
-            Log.w(TAG, formatMessage(message, args));
+            Log.w(tag, formatMessage(message, args));
         } else {
-            Log.w(TAG, formatMessage(message, args), tr);
+            Log.w(tag, formatMessage(message, args), tr);
         }
     }
 
     @Deprecated
     public void warn(Throwable e, String message, Object... args) {
-        Log.w(TAG, formatMessage(message, args), e);
+        Log.w(tag, formatMessage(message, args), e);
     }
 
+
+    /**
+     * Log object at the ERROR level
+     *
+     * @param obj If object null, 'null' will be printed, otherwise obj.toString() will call
+     */
     public void error(Object obj) {
-        Log.v(TAG, getString(obj));
+        Log.e(tag, getString(obj));
     }
 
     /**
@@ -210,9 +240,9 @@ public class Logger {
         Throwable tr = getThrowable(args);
 
         if (tr == null) {
-            Log.e(TAG, formatMessage(message, args));
+            Log.e(tag, formatMessage(message, args));
         } else {
-            Log.e(TAG, formatMessage(message, args), tr);
+            Log.e(tag, formatMessage(message, args), tr);
         }
     }
 
@@ -224,7 +254,7 @@ public class Logger {
      * @param tr      the exception (throwable) to log
      */
     public void error(String message, Throwable tr) {
-        Log.e(TAG, message, tr);
+        Log.e(tag, message, tr);
     }
 
     /**
@@ -237,11 +267,12 @@ public class Logger {
      */
     @Deprecated
     public void error(Throwable tr, String message, Object... args) {
-        Log.e(TAG, formatMessage(message, args), tr);
+        Log.e(tag, formatMessage(message, args), tr);
     }
 
+
     public void wtf(Object obj) {
-        Log.v(TAG, getString(obj));
+        Log.wtf(tag, getString(obj));
     }
 
     /**
@@ -255,13 +286,14 @@ public class Logger {
      * @param args    the arguments. Throwable can be passed as last argument and will print accordingly.
      */
     public void wtf(String message, Object... args) {
-        Log.wtf(TAG, formatMessage(message, args));
+        Log.wtf(tag, formatMessage(message, args));
     }
 
     @Deprecated
     public void wtf(Throwable e, String message, Object... args) {
-        Log.wtf(TAG, formatMessage(message, args), e);
+        Log.wtf(tag, formatMessage(message, args), e);
     }
+
 
     /**
      * Handy function to get a loggable stack trace from a Throwable
@@ -314,7 +346,7 @@ public class Logger {
         String tag[] = className.split("\\.");
 
         if (tag == null || tag.length < 2) {
-            return "com.oneous.log4android"; // Default TAG when can't derive from package name
+            return "com.oneous.log4android"; // Default tag when can't derive from package name
         } else {
             return tag[1];
         }
@@ -339,5 +371,9 @@ public class Logger {
         }
 
         return null;
+    }
+
+    private String getPrefixMessage(String className) {
+        return className + " >> ";
     }
 }
