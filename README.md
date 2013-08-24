@@ -21,7 +21,7 @@ Features
 
 Quick Start
 -----------
-First, add **Log4Android-1.1.jar** (can download from **releases** directory) at your android project library
+First, add **Log4Android-1.2.jar** (can download from **releases** directory) at your android project library
 
 Obtain a logger object in your Android code (Activity, Fragment, Service etc) like:
 > private static final Logger log = Logger.getLogger(MyActivity.class);
