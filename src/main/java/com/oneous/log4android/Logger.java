@@ -326,17 +326,16 @@ public class Logger {
 
         StringBuilder sbMessage = new StringBuilder(prefixMsg + message);
 
-        if (message == null || args == null) {
-            return sbMessage.toString();
+        if (message != null && args != null) {
+            for (Object arg : args) {
+                int index = sbMessage.indexOf(DELIM_STR);
+                if (index == -1) {
+                    break;
+                }
+                sbMessage.replace(index, index + DELIM_STR.length(), arg == null ? "null" : arg.toString());
+            }
         }
 
-        for (Object arg : args) {
-            int index = sbMessage.indexOf(DELIM_STR);
-            if (index == -1) {
-                return sbMessage.toString();
-            }
-            sbMessage.replace(index, index + DELIM_STR.length(), arg == null ? "null" : arg.toString());
-        }
         return sbMessage.toString();
     }
 
@@ -354,10 +353,10 @@ public class Logger {
 
     private String getString(Object obj) {
         if (obj == null) {
-            return prefixMsg + "null";
+            return formatMessage(null);
         }
 
-        return prefixMsg + obj.toString();
+        return formatMessage(obj.toString());
     }
 
     private Throwable getThrowable(Object[] args) {
