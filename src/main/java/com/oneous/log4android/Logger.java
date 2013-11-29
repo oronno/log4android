@@ -25,6 +25,8 @@ public class Logger {
 
     private static final String DELIM_STR = "{}";
 
+    private static boolean logDisabled;
+
     private String tag;
     private String prefixMsg;
 
@@ -97,6 +99,17 @@ public class Logger {
         return new Logger(clazz, tag);
     }
 
+    /**
+     * Can be used to disable printing logs. This should be call once and preferably from
+     * the class extends 'Application'. This is useful while you might want to disable log printing
+     * before publishing app to PlayStore.
+     * This will disable printing log for VERBOSE, DEBUG, INFO, WARN level.
+     *
+     * @param value true to disable printing logs (Default false)
+     */
+    public static void disableLogging(boolean value) {
+        Logger.logDisabled = value;
+    }
 
     /**
      * Log object at the VERBOSE level
@@ -104,6 +117,10 @@ public class Logger {
      * @param obj If object null, 'null' will be printed, otherwise obj.toString() will call
      */
     public void verbose(Object obj) {
+        if (logDisabled) {
+            return;
+        }
+
         Log.v(tag, getString(obj));
     }
 
@@ -116,6 +133,10 @@ public class Logger {
      * @param args    the arguments. Throwable can be passed as last argument and will print accordingly.
      */
     public void verbose(String message, Object... args) {
+        if (logDisabled) {
+            return;
+        }
+
         Throwable tr = getThrowable(args);
 
         if (tr == null) {
@@ -132,6 +153,9 @@ public class Logger {
      * @param obj If object null, 'null' will be printed, otherwise obj.toString() will call
      */
     public void debug(Object obj) {
+        if (logDisabled) {
+            return;
+        }
         Log.d(tag, getString(obj));
     }
 
@@ -144,6 +168,10 @@ public class Logger {
      * @param args    the arguments. Throwable can be passed as last argument and will print accordingly.
      */
     public void debug(String message, Object... args) {
+        if (logDisabled) {
+            return;
+        }
+
         Throwable tr = getThrowable(args);
 
         if (tr == null) {
@@ -159,6 +187,10 @@ public class Logger {
      * @param obj If object null, 'null' will be printed, otherwise obj.toString() will call
      */
     public void info(Object obj) {
+        if (logDisabled) {
+            return;
+        }
+
         Log.i(tag, getString(obj));
     }
 
@@ -171,6 +203,10 @@ public class Logger {
      * @param args    the arguments. Throwable can be passed as last argument and will print accordingly.
      */
     public void info(String message, Object... args) {
+        if (logDisabled) {
+            return;
+        }
+
         Throwable tr = getThrowable(args);
 
         if (tr == null) {
@@ -182,6 +218,10 @@ public class Logger {
 
     @Deprecated
     public void info(Throwable e, String message, Object... args) {
+        if (logDisabled) {
+            return;
+        }
+
         Log.i(tag, formatMessage(message, args), e);
     }
 
@@ -192,6 +232,10 @@ public class Logger {
      * @param obj If object null, 'null' will be printed, otherwise obj.toString() will call
      */
     public void warn(Object obj) {
+        if (logDisabled) {
+            return;
+        }
+
         Log.w(tag, getString(obj));
     }
 
@@ -204,6 +248,10 @@ public class Logger {
      * @param args    the arguments. Throwable can be passed as last argument and will print accordingly.
      */
     public void warn(String message, Object... args) {
+        if (logDisabled) {
+            return;
+        }
+
         Throwable tr = getThrowable(args);
 
         if (tr == null) {
@@ -215,6 +263,10 @@ public class Logger {
 
     @Deprecated
     public void warn(Throwable e, String message, Object... args) {
+        if (logDisabled) {
+            return;
+        }
+
         Log.w(tag, formatMessage(message, args), e);
     }
 
