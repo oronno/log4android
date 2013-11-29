@@ -6,7 +6,7 @@
 
     <groupId>com.oneous</groupId>
     <artifactId>Log4Android</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
     <packaging>jar</packaging>
 
     <name>Log4Android - Simple Logging Wrapper Library for Android</name>

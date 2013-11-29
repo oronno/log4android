@@ -10,18 +10,22 @@ Come from Java Enterprise Development where infamous Log4J used heavily??
 Well, with this Log4Android library, you can easily write log with your old habit
 > log.debug("in myMethod, id={}, name={}", ver1, ver2);
 
+You also can easily disable printing logs by calling method Logger.disableLogging(true). This specially
+useful when you want to remove log printing while publishing app in playstore.
+
 Features
 --------
 - Log syntax similar with popular log4j framework
 - Automatically added TAG with log message
 - Derive TAG from the package name
+- Can disable logging by simply calling Logger.disableLogging(true) method preferably from the class extends Application.
 - Fully Qualified Class name or SimpleClassName will logged as prefix with log message
 - Variable Arguments (more than 2) can be passed for printing unlike log4j framework
 - Very lightweight, < 5KB library size!
 
 Quick Start
 -----------
-First, add **Log4Android-1.2.jar** (can download from **releases** directory) at your android project library
+First, add **Log4Android-x.x.jar** (can download from **releases** directory) at your android project library
 
 Obtain a logger object in your Android code (Activity, Fragment, Service etc) like:
 > private static final Logger log = Logger.getLogger(MyActivity.class);
